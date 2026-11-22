@@ -45,7 +45,15 @@ button:disabled{opacity:.4;cursor:not-allowed}
 <script>
 /* ====== EDITA ESTOS DATOS (iguales que en index.html) ====== */
 const URL_API="https://script.google.com/macros/s/AKfycbx2Jel5q-tKlC1J_uXuyI4SdYJ6tc_fLJTZf1HMmOdbn7nfoO_Tbf0lbfrqYFGmES1g/exec";
-const NAMES=["José Santiago Castro Campos","Jhonnatan Ramírez Caldas","Carol Vanessa","Daniel García Trujillo","José David Quintero Oviedo","Andrés Felipe Vidal Gallego"];
+const BLANCO="Voto en blanco";
+const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
+"Presidente":["Carol Vanessa","Andrés Felipe Vidal Gallego"],
+"Vicepresidente":["Carol Vanessa","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
+"Tesorero":["Carol Vanessa","Jhonnatan Ramírez Caldas"],
+"Webmaster":["Carol Vanessa"],
+"Fiscal":["Carol Vanessa","José Santiago Castro Campos"],
+"Secretaria":["Carol Vanessa"]
+};
 const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
 /* =========================================================== */
 async function load(){
@@ -57,8 +65,8 @@ async function load(){
   document.getElementById("upd").textContent="Actualizado: "+new Date().toLocaleTimeString("es-CO");
   const tot=d.total||1;
   out.innerHTML=P.map((p,pi)=>{
-   const cnt=NAMES.map(n=>(d.counts[pi]||{})[n]||0),max=Math.max(...cnt,0);
-   return `<div class="sec"><h2>${p}</h2>`+NAMES.map((n,ci)=>{
+   const L=RUN[p].concat([BLANCO]),cnt=L.map(n=>(d.counts[pi]||{})[n]||0),max=Math.max(...cnt,0);
+   return `<div class="sec"><h2>${p}</h2>`+L.map((n,ci)=>{
     const w=cnt[ci]===max&&max>0;
     return `<div class="row ${w?"w":""}"><div class="n">${n} ${w?'<span class="crown">▲ lidera</span>':""}</div>
     <div class="trk"><i style="width:${cnt[ci]/tot*100}%"></i></div><b>${cnt[ci]}</b></div>`}).join("")+`</div>`}).join("");
