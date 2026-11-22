@@ -43,6 +43,8 @@ h2{text-align:center;font-size:1.7rem;margin:14px 0 18px;color:var(--g1)}
 .intro .big{font-size:3rem}
 .intro input{width:100%;padding:14px;font-size:1.1rem;text-align:center;border-radius:12px;border:2px solid var(--bd);background:var(--bg);color:var(--tx);margin:14px 0}
 .intro input:focus{outline:0;border-color:var(--g3)}
+.card.blank .ph{background:#e8eee4;color:#7b8c7f}
+.card.blank{border-style:dashed}
 </style>
 </head>
 <body>
@@ -63,26 +65,36 @@ const C=[
 {n:"Andrés Felipe Vidal Gallego",s:"—",c:"—",img:""}
 ]; // img: ruta de la foto, ej. "fotos/jose.jpg"
 const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
+const BLANCO="Voto en blanco";
+const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
+"Presidente":["Carol Vanessa","Andrés Felipe Vidal Gallego"],
+"Vicepresidente":["Carol Vanessa","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
+"Tesorero":["Carol Vanessa","Jhonnatan Ramírez Caldas"],
+"Webmaster":["Carol Vanessa"],
+"Fiscal":["Carol Vanessa","José Santiago Castro Campos"],
+"Secretaria":["Carol Vanessa"]
+};
+const opts=p=>RUN[p].map(n=>C.find(c=>c.n===n)).concat([{n:BLANCO,blank:true}]);
 /* =============================== */
 
 let step=0,votes={},busy=false,error="",started=false,code="";
 const app=document.getElementById("app");
 
 const ini=n=>n.split(" ").slice(0,2).map(w=>w[0]).join("");
-const ph=i=>C[i].img?`<img src="${C[i].img}" alt="">`:ini(C[i].n);
+const ph=c=>c.blank?"○":c.img?`<img src="${c.img}" alt="">`:ini(c.n);
 
 function render(){
  if(!started)return intro();
  if(step>=P.length)return review();
- const sel=votes[step];
+ const sel=votes[step],O=opts(P[step]);
  app.innerHTML=`<div class="step">Cargo ${step+1} de ${P.length}</div>
  <div class="bar"><i style="width:${step/P.length*100}%"></i></div><h2>${P[step]}</h2>
- <div class="grid">${C.map((c,i)=>`<div class="card ${sel===i?"sel":""}" data-i="${i}">
-  <div class="ph">${ph(i)}</div><div class="nm">${c.n}</div>
-  <div class="info">Semestre: ${c.s}<br>Código: ${c.c}</div></div>`).join("")}</div>
+ <div class="grid">${O.map((c,i)=>`<div class="card ${c.blank?"blank":""} ${sel===c.n?"sel":""}" data-i="${i}">
+  <div class="ph">${ph(c)}</div><div class="nm">${c.n}</div>
+  <div class="info">${c.blank?"No apoyo a ningún candidato":`Semestre: ${c.s}<br>Código: ${c.c}`}</div></div>`).join("")}</div>
  <div class="nav"><button class="b g" id="bk" ${step?"":"disabled"}>← Atrás</button>
  <button class="b" id="nx" ${sel===undefined?"disabled":""}>${step===P.length-1?"Revisar":"Siguiente →"}</button></div>`;
- app.querySelectorAll(".card").forEach(e=>e.onclick=()=>{votes[step]=+e.dataset.i;render()});
+ app.querySelectorAll(".card").forEach(e=>e.onclick=()=>{votes[step]=O[+e.dataset.i].n;render()});
  document.getElementById("bk").onclick=()=>{step--;render()};
  document.getElementById("nx").onclick=()=>{step++;render()};
 }
@@ -109,7 +121,7 @@ function intro(){
 }
 function review(){
  app.innerHTML=`<div class="bar"><i style="width:100%"></i></div><h2>Confirma tu voto</h2>
- <div class="rev">${P.map((p,i)=>`<div><span>${p}</span><b>${C[votes[i]].n}</b></div>`).join("")}</div>
+ <div class="rev">${P.map((p,i)=>`<div><span>${p}</span><b>${votes[i]}</b></div>`).join("")}</div>
  ${error?`<div class="err">${error}</div>`:""}
  <div class="nav" style="max-width:560px;margin-inline:auto"><button class="b g" id="bk">← Corregir</button><button class="b" id="ok" ${busy?"disabled":""}>${busy?"Guardando…":"Emitir voto ✓"}</button></div>`;
  document.getElementById("bk").onclick=()=>{error="";step=P.length-1;render()};
@@ -119,7 +131,7 @@ function review(){
 async function send(){
  busy=true;error="";review();
  try{
-  const r=await fetch(URL_API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({code:code,v:P.map((_,i)=>C[votes[i]].n)})});
+  const r=await fetch(URL_API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({code:code,v:P.map((_,i)=>votes[i])})});
   const j=await r.json();
   if(!j.ok){busy=false;if(j.error==="duplicado"){started=false;error="Este código ya votó.";return render()}throw new Error(j.error||"Error al guardar")}
   busy=false;done();
