@@ -138,9 +138,7 @@ async function send(){
  }catch(e){busy=false;error="No se pudo guardar el voto: "+e.message;review()}
 }
 function done(){
- app.innerHTML=`<div class="done"><div class="big">🎉</div><h2>¡Voto registrado!</h2>
- <div class="nav" style="justify-content:center"><button class="b" id="nw">Nuevo votante</button><a href="resultados.html"><button class="b g">Ver resultados</button></a></div></div>`;
- document.getElementById("nw").onclick=()=>{step=0;votes={};started=false;code="";render()};
+ app.innerHTML=`<div class="done"><div class="big">🎉</div><h2>¡Voto registrado!</h2><p style="color:var(--mu)">Gracias por participar.</p></div>`;
 }
 render();
 </script>
