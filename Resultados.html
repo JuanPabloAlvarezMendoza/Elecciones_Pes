@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resultados</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2240;--mu:#6b7390;--ac:#4f46e5;--ac2:#7c3aed;--bd:#e3e7f2;--ok:#16a34a}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1220;--card:#1a1e33;--tx:#eef0fa;--mu:#9aa2c4;--bd:#2c3253;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;text-align:center;padding:26px 16px 20px}
+header h1{margin:0 0 4px;font-size:1.7rem}header p{margin:0;opacity:.9}
+main{max-width:900px;margin:0 auto;padding:20px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.tot{font-weight:700;font-size:1.1rem}
+button{border:0;border-radius:12px;padding:10px 18px;font-weight:600;cursor:pointer;background:var(--ac);color:#fff}
+.sec{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px 18px;margin-bottom:16px}
+.sec h2{margin:0 0 12px;font-size:1.2rem}
+.row{display:grid;grid-template-columns:minmax(120px,1.4fr) 3fr 40px;gap:10px;align-items:center;margin:8px 0;font-size:.92rem}
+.trk{height:16px;background:var(--bd);border-radius:99px;overflow:hidden}
+.trk i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:99px;transition:width .5s}
+.row.w .trk i{background:var(--ok)}
+.row.w .n{font-weight:700}
+.row b{text-align:right}
+.crown{font-size:.8rem;color:var(--ok)}
+.msg{text-align:center;color:var(--mu);padding:20px}
+.upd{color:var(--mu);font-size:.8rem}
+@media(max-width:520px){.row{grid-template-columns:1fr 40px}.row .trk{grid-column:1/-1;grid-row:2}}
+</style>
+</head>
+<body>
+<header><h1>📊 Resultados</h1><p>Conteo en vivo de las votaciones</p></header>
+<main>
+ <div class="top"><div><div class="tot" id="tot">Cargando…</div><div class="upd" id="upd"></div></div><button id="rf">Actualizar</button></div>
+ <div id="out"></div>
+</main>
+<script>
+/* ====== EDITA ESTOS DATOS (iguales que en index.html) ====== */
+const OWNER="TU_USUARIO", REPO="TU_REPOSITORIO", BRANCH="main", FILE="votes.json";
+const NAMES=["José Santiago Castro Campos","Jhonnatan Ramírez Caldas","Carol Vanessa","Daniel García Trujillo","José David Quintero Oviedo","Andrés Felipe Vidal Gallego"];
+const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
+/* =========================================================== */
+const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}?ref=${BRANCH}`;
+async function load(){
+ const out=document.getElementById("out");
+ try{
+  const r=await fetch(api+"&t="+Date.now(),{headers:{Accept:"application/vnd.github.raw+json"}});
+  if(r.status===404){document.getElementById("tot").textContent="Aún no hay votos";out.innerHTML="";return}
+  if(!r.ok)throw new Error(r.status);
+  const d=await r.json(),V=d.votes||[];
+  document.getElementById("tot").textContent="Votos totales: "+V.length;
+  document.getElementById("upd").textContent="Actualizado: "+new Date().toLocaleTimeString("es-CO");
+  out.innerHTML=P.map((p,pi)=>{
+   const cnt=NAMES.map((_,ci)=>V.filter(v=>v.v[pi]===ci).length);
+   const max=Math.max(...cnt,0),tot=V.length||1;
+   return `<div class="sec"><h2>${p}</h2>`+NAMES.map((n,ci)=>{
+    const w=cnt[ci]===max&&max>0;
+    return `<div class="row ${w?"w":""}"><div class="n">${n} ${w?'<span class="crown">▲ lidera</span>':""}</div>
+    <div class="trk"><i style="width:${cnt[ci]/tot*100}%"></i></div><b>${cnt[ci]}</b></div>`}).join("")+`</div>`}).join("");
+ }catch(e){document.getElementById("out").innerHTML='<div class="msg">No se pudieron cargar los resultados. Revisa OWNER y REPO, y que el repositorio sea público.</div>'}
+}
+document.getElementById("rf").onclick=load;
+load();setInterval(load,90000);
+</script>
+</body>
+</html>
