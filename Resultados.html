@@ -9,44 +9,71 @@
 :root{--bg:#ffffff;color-scheme:light;--card:#fff;--tx:#14241a;--mu:#5b6f5f;--bd:#d9e7cf;--g1:#1f5130;--g2:#3f7d3a;--g3:#7fb33b;--lime:#b5d23a;--ok:#2f8f3a;--sh:rgba(31,81,48,.14)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{background:linear-gradient(135deg,var(--g1),var(--g2));border-bottom:5px solid;border-image:linear-gradient(90deg,var(--g1),var(--g3),var(--lime)) 1;display:flex;align-items:center;justify-content:center;gap:18px;padding:14px 16px;flex-wrap:wrap;text-align:left}
+header{background:linear-gradient(135deg,var(--g1),var(--g2));border-bottom:5px solid;border-image:linear-gradient(90deg,var(--g1),var(--g3),var(--lime)) 1;display:flex;align-items:center;justify-content:center;gap:18px;padding:14px 16px;flex-wrap:wrap}
 header .logo{height:78px;width:auto;background:#fff;border-radius:14px;padding:4px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 header h1{margin:0;font-size:1.6rem;color:#fff}
 header p{margin:2px 0 0;color:rgba(255,255,255,.88)}
 @media(max-width:520px){header{text-align:center;flex-direction:column;gap:8px}}
 main{max-width:1000px;margin:0 auto;padding:20px 16px 40px}
-button,button.b{border:0;border-radius:12px;padding:12px 22px;font-size:1rem;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;transition:.15s}
-button:hover:not(:disabled){filter:brightness(1.12)}
-button.g{background:var(--card);color:var(--g2);border:1.5px solid var(--g3)}
-button:disabled{opacity:.4;cursor:not-allowed}
-
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.tot{font-weight:800;font-size:1.3rem;color:var(--g1)}
-.upd{color:var(--mu);font-size:.8rem}
+button{border:0;border-radius:12px;padding:10px 18px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff}
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(135deg,#f3f9e8,#e8f3d6);border:1px solid var(--bd);border-radius:20px;padding:16px 20px}
+.top .num{font-size:2.6rem;font-weight:800;color:var(--g1);line-height:1}
+.top .lbl{color:var(--mu);font-size:.9rem}
+.upd{color:var(--mu);font-size:.8rem;margin-top:4px}
+h2.t{font-size:1.35rem;color:var(--g1);margin:28px 0 4px;padding-left:10px;border-left:5px solid var(--lime)}
+.sub{color:var(--mu);font-size:.9rem;margin:0 0 14px 15px}
+.wins{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.win{background:var(--card);border:2px solid var(--bd);border-radius:18px;padding:10px;text-align:center;position:relative;box-shadow:0 4px 14px var(--sh)}
+.win.lead{border-color:var(--g3)}
+.win .cg{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g2);margin-bottom:6px}
+.ph{width:100%;aspect-ratio:1/1;border-radius:16px;background:linear-gradient(135deg,var(--g1),var(--g2) 60%,var(--g3));color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;overflow:hidden;margin-bottom:8px}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph.bl{background:#e8eee4;color:#7b8c7f}
+.ph.none{background:#eef2eb;color:#a3b0a5}
+.win .nm{font-weight:700;font-size:.92rem;line-height:1.25}
+.win .pc{margin-top:4px;color:var(--mu);font-size:.88rem}
+.win .pc b{color:var(--g1);font-size:1.15rem}
+.crown{display:inline-block;margin-bottom:8px;background:var(--lime);color:var(--g1);font-weight:800;font-size:.72rem;border-radius:8px;padding:3px 8px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
 .sec{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:16px 18px;margin-bottom:16px;box-shadow:0 4px 14px var(--sh)}
-.sec h2{margin:0 0 12px;font-size:1.2rem;color:var(--g2);padding-left:10px;border-left:5px solid var(--lime)}
-.row{display:grid;grid-template-columns:minmax(120px,1.4fr) 3fr 40px;gap:10px;align-items:center;margin:8px 0;font-size:.92rem}
-.trk{height:16px;background:var(--bd);border-radius:99px;overflow:hidden}
-.trk i{display:block;height:100%;background:linear-gradient(90deg,#6aa84f,#9cc653);border-radius:99px;transition:width .5s}
-.row.w .trk i{background:linear-gradient(90deg,var(--g1),var(--g3),var(--lime))}
-.row.w .n{font-weight:700;color:var(--g1)}
-.row b{text-align:right}
-.crown{font-size:.75rem;color:#fff;background:var(--ok);border-radius:8px;padding:2px 7px;margin-left:4px;white-space:nowrap}
+.sec h3{margin:0 0 12px;font-size:1.15rem;color:var(--g2)}
+.body{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.donut{position:relative;width:170px;height:170px;flex:none;margin:0 auto}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut .c b{font-size:1.7rem;color:var(--g1);line-height:1}
+.donut .c span{font-size:.72rem;color:var(--mu)}
+.list{flex:1;min-width:240px}
+.it{display:grid;grid-template-columns:26px 1fr auto;gap:4px 10px;align-items:center;margin:10px 0}
+.rk{width:26px;height:26px;border-radius:8px;background:var(--bd);color:var(--g1);font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.it.first .rk{background:var(--lime)}
+.it .n{font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:8px}
+.dot{width:12px;height:12px;border-radius:4px;flex:none}
+.it .v{font-size:.9rem;color:var(--mu);text-align:right;white-space:nowrap}
+.it .v b{color:var(--tx)}
+.trk{grid-column:2/4;height:10px;background:var(--bd);border-radius:99px;overflow:hidden}
+.trk i{display:block;height:100%;border-radius:99px;transition:width .6s}
 .msg{text-align:center;color:var(--mu);padding:20px}
-@media(max-width:520px){.row{grid-template-columns:1fr 40px}.row .trk{grid-column:1/-1;grid-row:2}}
 </style>
 </head>
 <body>
 <header><img class="logo" src="logo.jpg" alt="IEEE PES USCO"><div><h1>Resultados</h1><p>Conteo en vivo · IEEE PES USCO</p></div></header>
 <main>
- <div class="top"><div><div class="tot" id="tot">Cargando…</div><div class="upd" id="upd"></div></div><button id="rf">Actualizar</button></div>
+ <div class="top"><div><div class="num" id="tot">…</div><div class="lbl">personas han votado</div><div class="upd" id="upd"></div></div><button id="rf">↻ Actualizar</button></div>
  <div id="out"></div>
 </main>
 <script>
 /* ====== EDITA ESTOS DATOS (iguales que en index.html) ====== */
 const URL_API="https://script.google.com/macros/s/AKfycbx2Jel5q-tKlC1J_uXuyI4SdYJ6tc_fLJTZf1HMmOdbn7nfoO_Tbf0lbfrqYFGmES1g/exec";
+const C=[
+{n:"José Santiago Castro Campos",img:""},
+{n:"Jhonnatan Ramírez Caldas",img:""},
+{n:"Carol Vanessa",img:""},
+{n:"Daniel García Trujillo",img:""},
+{n:"José David Quintero Oviedo",img:""},
+{n:"Andrés Felipe Vidal Gallego",img:""}
+]; // img: misma ruta de foto que en index.html
 const BLANCO="Voto en blanco";
-const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
+const RUN={
 "Presidente":["Carol Vanessa","Andrés Felipe Vidal Gallego"],
 "Vicepresidente":["Carol Vanessa","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
 "Tesorero":["Carol Vanessa","Jhonnatan Ramírez Caldas"],
@@ -56,20 +83,48 @@ const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
 };
 const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
 /* =========================================================== */
+const COL=["#1f5130","#b5d23a","#4f9a3f","#111111","#8bb83a","#2e6b34"],GRAY="#b9c6b6";
+const ini=n=>n.split(" ").slice(0,2).map(w=>w[0]).join("");
+const colorOf=(i,n)=>n===BLANCO?GRAY:COL[i%COL.length];
+const photo=n=>{const c=C.find(x=>x.n===n);return n===BLANCO?'<div class="ph bl">○</div>':`<div class="ph">${c&&c.img?`<img src="${c.img}" alt="">`:ini(n)}</div>`};
+const pct=(v,t)=>t?Math.round(v/t*1000)/10:0;
+
+function donut(rows,total){
+ let off=25,seg="";
+ rows.forEach(r=>{const p=total?r.v/total*100:0;if(p>0){seg+=`<circle cx="21" cy="21" r="15.915" fill="none" stroke="${r.col}" stroke-width="6" stroke-dasharray="${p} ${100-p}" stroke-dashoffset="${off}"/>`;off-=p}});
+ return `<div class="donut"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.915" fill="none" stroke="#e6eee0" stroke-width="6"/>${seg}</svg>
+ <div class="c"><b>${total}</b><span>votos</span></div></div>`;
+}
+
 async function load(){
  const out=document.getElementById("out");
  try{
   const r=await fetch(URL_API+"?t="+Date.now());
-  const d=await r.json();
-  document.getElementById("tot").textContent=d.total?("Votos totales: "+d.total):"Aún no hay votos";
+  const d=await r.json(),T=d.total||0;
+  document.getElementById("tot").textContent=T;
   document.getElementById("upd").textContent="Actualizado: "+new Date().toLocaleTimeString("es-CO");
-  const tot=d.total||1;
-  out.innerHTML=P.map((p,pi)=>{
-   const L=RUN[p].concat([BLANCO]),cnt=L.map(n=>(d.counts[pi]||{})[n]||0),max=Math.max(...cnt,0);
-   return `<div class="sec"><h2>${p}</h2>`+L.map((n,ci)=>{
-    const w=cnt[ci]===max&&max>0;
-    return `<div class="row ${w?"w":""}"><div class="n">${n} ${w?'<span class="crown">▲ lidera</span>':""}</div>
-    <div class="trk"><i style="width:${cnt[ci]/tot*100}%"></i></div><b>${cnt[ci]}</b></div>`}).join("")+`</div>`}).join("");
+  const data=P.map((p,pi)=>{
+   const L=RUN[p].concat([BLANCO]);
+   const rows=L.map((n,i)=>({n,v:(d.counts[pi]||{})[n]||0,col:colorOf(i,n)}));
+   const max=Math.max(...rows.map(x=>x.v));
+   const lead=max>0?rows.filter(x=>x.v===max):[];
+   const sorted=[...rows].sort((a,b)=>b.v-a.v);
+   return{p,rows,sorted,max,lead};
+  });
+  const wins=data.map(x=>{
+   if(!x.lead.length)return `<div class="win"><div class="cg">${x.p}</div><div class="ph none">?</div><div class="nm">Sin votos aún</div></div>`;
+   const tie=x.lead.length>1,w=x.lead[0];
+   return `<div class="win lead"><div class="cg">${x.p}</div><div class="crown">${tie?"EMPATE":"👑 LIDERA"}</div>
+   ${tie?'<div class="ph none">=</div>':photo(w.n)}
+   <div class="nm">${tie?x.lead.map(l=>l.n.split(" ").slice(0,2).join(" ")).join(" = "):w.n}</div>
+   <div class="pc"><b>${pct(x.max,T)}%</b> · ${x.max} ${x.max===1?"voto":"votos"}</div></div>`}).join("");
+  const dets=data.map(x=>`<div class="sec"><h3>${x.p}</h3><div class="body">${donut(x.rows,T)}<div class="list">
+   ${x.sorted.map((r,i)=>`<div class="it ${i===0&&r.v>0?"first":""}"><div class="rk">${i+1}</div>
+    <div class="n"><span class="dot" style="background:${r.col}"></span>${r.n}</div>
+    <div class="v"><b>${r.v}</b> ${r.v===1?"voto":"votos"} · ${pct(r.v,T)}%</div>
+    <div class="trk"><i style="width:${pct(r.v,T)}%;background:${r.col}"></i></div></div>`).join("")}</div></div></div>`).join("");
+  out.innerHTML=`<h2 class="t">🏆 ¿Quién va ganando?</h2><p class="sub">El candidato con más votos en cada cargo.</p><div class="wins">${wins}</div>
+   <h2 class="t">📊 Detalle por cargo</h2><p class="sub">El círculo muestra qué parte de los votos se llevó cada opción. Abajo está el ranking de mayor a menor.</p>${dets}`;
  }catch(e){out.innerHTML='<div class="msg">No se pudieron cargar los resultados. Revisa la URL del script.</div>'}
 }
 document.getElementById("rf").onclick=load;
