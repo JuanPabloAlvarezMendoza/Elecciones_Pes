@@ -37,28 +37,25 @@ button{border:0;border-radius:12px;padding:10px 18px;font-weight:600;cursor:poin
 </main>
 <script>
 /* ====== EDITA ESTOS DATOS (iguales que en index.html) ====== */
-const OWNER="TU_USUARIO", REPO="TU_REPOSITORIO", BRANCH="main", FILE="votes.json";
+const URL_API="https://script.google.com/macros/s/AKfycbx2Jel5q-tKlC1J_uXuyI4SdYJ6tc_fLJTZf1HMmOdbn7nfoO_Tbf0lbfrqYFGmES1g/exec";
 const NAMES=["José Santiago Castro Campos","Jhonnatan Ramírez Caldas","Carol Vanessa","Daniel García Trujillo","José David Quintero Oviedo","Andrés Felipe Vidal Gallego"];
 const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
 /* =========================================================== */
-const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}?ref=${BRANCH}`;
 async function load(){
  const out=document.getElementById("out");
  try{
-  const r=await fetch(api+"&t="+Date.now(),{headers:{Accept:"application/vnd.github.raw+json"}});
-  if(r.status===404){document.getElementById("tot").textContent="Aún no hay votos";out.innerHTML="";return}
-  if(!r.ok)throw new Error(r.status);
-  const d=await r.json(),V=d.votes||[];
-  document.getElementById("tot").textContent="Votos totales: "+V.length;
+  const r=await fetch(URL_API+"?t="+Date.now());
+  const d=await r.json();
+  document.getElementById("tot").textContent=d.total?("Votos totales: "+d.total):"Aún no hay votos";
   document.getElementById("upd").textContent="Actualizado: "+new Date().toLocaleTimeString("es-CO");
+  const tot=d.total||1;
   out.innerHTML=P.map((p,pi)=>{
-   const cnt=NAMES.map((_,ci)=>V.filter(v=>v.v[pi]===ci).length);
-   const max=Math.max(...cnt,0),tot=V.length||1;
+   const cnt=NAMES.map(n=>(d.counts[pi]||{})[n]||0),max=Math.max(...cnt,0);
    return `<div class="sec"><h2>${p}</h2>`+NAMES.map((n,ci)=>{
     const w=cnt[ci]===max&&max>0;
     return `<div class="row ${w?"w":""}"><div class="n">${n} ${w?'<span class="crown">▲ lidera</span>':""}</div>
     <div class="trk"><i style="width:${cnt[ci]/tot*100}%"></i></div><b>${cnt[ci]}</b></div>`}).join("")+`</div>`}).join("");
- }catch(e){document.getElementById("out").innerHTML='<div class="msg">No se pudieron cargar los resultados. Revisa OWNER y REPO, y que el repositorio sea público.</div>'}
+ }catch(e){out.innerHTML='<div class="msg">No se pudieron cargar los resultados. Revisa la URL del script.</div>'}
 }
 document.getElementById("rf").onclick=load;
 load();setInterval(load,90000);
