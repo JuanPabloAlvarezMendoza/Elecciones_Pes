@@ -40,19 +40,14 @@ dialog input{width:100%;padding:10px;border-radius:10px;border:1px solid var(--b
 </style>
 </head>
 <body>
-<header><button id="cfg" title="Configuración">⚙️</button><h1>🗳️ Elecciones del Comité</h1><p>Elige un candidato para cada cargo</p></header>
+<header><h1>🗳️ Elecciones del Comité</h1><p>Elige un candidato para cada cargo</p></header>
 <main id="app"></main>
 
-<dialog id="dlg">
- <h3 style="margin-top:0">Configuración (solo organizador)</h3>
- <p style="font-size:.85rem;color:var(--mu)">Pega aquí tu token de GitHub. Se guarda solo en este navegador, nunca en el código.</p>
- <input id="tok" type="password" placeholder="github_pat_...">
- <div style="display:flex;gap:8px;justify-content:flex-end"><button class="b g" id="cl">Cerrar</button><button class="b" id="sv">Guardar</button></div>
-</dialog>
+
 
 <script>
 /* ====== EDITA ESTOS DATOS ====== */
-const OWNER="TU_USUARIO", REPO="TU_REPOSITORIO", BRANCH="main", FILE="votes.json";
+const URL_API="https://script.google.com/macros/s/AKfycbx2Jel5q-tKlC1J_uXuyI4SdYJ6tc_fLJTZf1HMmOdbn7nfoO_Tbf0lbfrqYFGmES1g/exec";
 const C=[
 {n:"José Santiago Castro Campos",s:"—",c:"—",img:""},
 {n:"Jhonnatan Ramírez Caldas",s:"—",c:"—",img:""},
@@ -65,11 +60,7 @@ const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretar
 /* =============================== */
 
 let step=0,votes={},busy=false,error="";
-const app=document.getElementById("app"),dlg=document.getElementById("dlg");
-const getTok=()=>{try{return localStorage.getItem("gh_token")||""}catch(e){return ""}};
-document.getElementById("cfg").onclick=()=>{document.getElementById("tok").value=getTok();dlg.showModal()};
-document.getElementById("cl").onclick=()=>dlg.close();
-document.getElementById("sv").onclick=()=>{try{localStorage.setItem("gh_token",document.getElementById("tok").value.trim())}catch(e){}dlg.close()};
+const app=document.getElementById("app");
 
 const ini=n=>n.split(" ").slice(0,2).map(w=>w[0]).join("");
 const ph=i=>C[i].img?`<img src="${C[i].img}" alt="">`:ini(C[i].n);
@@ -97,28 +88,14 @@ function review(){
  document.getElementById("ok").onclick=send;
 }
 
-const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`;
-const dec=b=>new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g,"")),c=>c.charCodeAt(0)));
-const enc=s=>{const u=new TextEncoder().encode(s);let b="";u.forEach(x=>b+=String.fromCharCode(x));return btoa(b)};
-
-async function commitVote(tok,tries=3){
- const h={Authorization:"Bearer "+tok,Accept:"application/vnd.github+json"};
- const g=await fetch(api+"?ref="+BRANCH+"&t="+Date.now(),{headers:h});
- let data={votes:[]},sha;
- if(g.ok){const j=await g.json();sha=j.sha;try{data=JSON.parse(dec(j.content))}catch(e){}}
- else if(g.status!==404)throw new Error("No se pudo leer el archivo ("+g.status+"). Revisa el token.");
- if(!Array.isArray(data.votes))data.votes=[];
- data.votes.push({t:new Date().toISOString(),v:P.map((_,i)=>votes[i])});
- const r=await fetch(api,{method:"PUT",headers:h,body:JSON.stringify({message:"Nuevo voto",content:enc(JSON.stringify(data,null,2)),branch:BRANCH,sha})});
- if(r.status===409&&tries>0)return commitVote(tok,tries-1);
- if(!r.ok)throw new Error("No se pudo guardar ("+r.status+").");
-}
 async function send(){
- const tok=getTok();
- if(!tok){error="Falta el token. Toca ⚙️ arriba a la derecha para configurarlo.";return review()}
  busy=true;error="";review();
- try{await commitVote(tok);busy=false;done()}
- catch(e){busy=false;error=e.message;review()}
+ try{
+  const r=await fetch(URL_API,{method:"POST",body:JSON.stringify({v:P.map((_,i)=>C[votes[i]].n)})});
+  const j=await r.json();
+  if(!j.ok)throw new Error(j.error||"Error al guardar");
+  busy=false;done();
+ }catch(e){busy=false;error="No se pudo guardar el voto. Revisa tu conexión e inténtalo de nuevo.";review()}
 }
 function done(){
  app.innerHTML=`<div class="done"><div class="big">🎉</div><h2>¡Voto registrado!</h2>
