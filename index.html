@@ -67,17 +67,17 @@ const C=[
 const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
 const BLANCO="Voto en blanco";
 const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
-"Presidente":["Carol Vanessa Garcia Sanchez","Andrés Felipe Vidal Gallego"],
-"Vicepresidente":["Carol Vanessa Garcia Sanchez","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
-"Tesorero":["Carol Vanessa Garcia Sanchez","Jhonnatan Ramírez Caldas"],
-"Webmaster":["Carol Vanessa Garcia Sanchez"],
-"Fiscal":["Carol Vanessa Garcia Sanchez","José Santiago Castro Campos"],
-"Secretaria":["Carol Vanessa Garcia Sanchez"]
+"Presidente":["Carol Vanessa","Andrés Felipe Vidal Gallego"],
+"Vicepresidente":["Carol Vanessa","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
+"Tesorero":["Carol Vanessa","Jhonnatan Ramírez Caldas"],
+"Webmaster":["Carol Vanessa"],
+"Fiscal":["Carol Vanessa","José Santiago Castro Campos"],
+"Secretaria":["Carol Vanessa"]
 };
 const opts=p=>RUN[p].map(n=>C.find(c=>c.n===n)).concat([{n:BLANCO,blank:true}]);
 /* =============================== */
 
-let step=0,votes={},busy=false,error="",started=false,code="";
+let step=0,votes={},busy=false,error="",started=false,code="",pname="";
 const app=document.getElementById("app");
 
 const ini=n=>n.split(" ").slice(0,2).map(w=>w[0]).join("");
@@ -99,16 +99,20 @@ function render(){
  document.getElementById("nx").onclick=()=>{step++;render()};
 }
 function intro(){
+ const q=t=>t.replace(/"/g,"&quot;");
  app.innerHTML=`<div class="intro"><div class="big">🗳️</div><h2 style="margin:6px 0">Bienvenido</h2>
- <p style="color:var(--mu);margin:0">Ingresa tu código de estudiante para poder votar. Solo se permite un voto por código.</p>
- <input id="cd" inputmode="numeric" autocomplete="off" placeholder="Tu código" value="${code}">
+ <p style="color:var(--mu);margin:0 0 8px">Ingresa tu nombre y tu código de estudiante para votar. Solo se permite un voto por código.</p>
+ <input id="nm" type="text" autocomplete="name" maxlength="60" placeholder="Tu nombre completo" style="margin:6px 0" value="${q(pname)}">
+ <input id="cd" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="15" placeholder="Tu código (solo números)" style="margin:6px 0 14px" value="${q(code)}">
  ${error?`<div class="err" style="margin:0 0 12px">${error}</div>`:""}
  <button class="b" id="go" style="width:100%" ${busy?"disabled":""}>${busy?"Verificando…":"Comenzar"}</button></div>`;
- const inp=document.getElementById("cd");
- inp.onkeydown=e=>{if(e.key==="Enter")document.getElementById("go").click()};
+ const nm=document.getElementById("nm"),cd=document.getElementById("cd");
+ cd.oninput=()=>{cd.value=cd.value.replace(/\D/g,"")};
+ [nm,cd].forEach(i=>i.onkeydown=e=>{if(e.key==="Enter")document.getElementById("go").click()});
  document.getElementById("go").onclick=async()=>{
-  code=inp.value.trim();error="";
-  if(!/^[A-Za-z0-9]{4,15}$/.test(code)){error="Escribe un código válido (solo letras y números).";return intro()}
+  pname=nm.value.trim().replace(/\s+/g," ");code=cd.value.trim();error="";
+  if(pname.length<3){error="Escribe tu nombre completo.";return intro()}
+  if(!/^\d{6,15}$/.test(code)){error="El código debe tener solo números.";return intro()}
   if(URL_API.startsWith("PEGA")){error="Falta pegar la URL del script en el archivo index.html.";return intro()}
   busy=true;intro();
   try{
@@ -131,7 +135,7 @@ function review(){
 async function send(){
  busy=true;error="";review();
  try{
-  const r=await fetch(URL_API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({code:code,v:P.map((_,i)=>votes[i])})});
+  const r=await fetch(URL_API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({code:code,name:pname,v:P.map((_,i)=>votes[i])})});
   const j=await r.json();
   if(!j.ok){busy=false;if(j.error==="duplicado"){started=false;error="Este código ya votó.";return render()}throw new Error(j.error||"Error al guardar")}
   busy=false;done();
