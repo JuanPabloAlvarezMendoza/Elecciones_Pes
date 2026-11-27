@@ -65,16 +65,17 @@ h2.t{font-size:1.35rem;color:var(--g1);margin:28px 0 4px;padding-left:10px;borde
 /* ====== EDITA ESTOS DATOS (iguales que en index.html) ====== */
 const URL_API="https://script.google.com/macros/s/AKfycbx2Jel5q-tKlC1J_uXuyI4SdYJ6tc_fLJTZf1HMmOdbn7nfoO_Tbf0lbfrqYFGmES1g/exec";
 const C=[
-{n:"José Santiago Castro Campos",s:"Décimo",c:"20221204327",img:"fotos/Jose_santiago.jpeg"},
-{n:"Jhonnatan Ramírez Caldas",s:"Décimo",c:"20221205120",img:"fotos/Jhonnatan.jpeg"},
-{n:"Carol Vanessa Garcia Sanchez",s:"Octavo",c:"20231213601",img:"fotos/Carol.jpeg"},
-{n:"Daniel García Trujillo",s:"Noveno",c:"20222208587",img:"fotos/Daniel.jpeg"},
-{n:"José David Quintero Oviedo",s:"Séptimo",c:"20232217161",img:"fotos/Jose_david.jpeg"},
-{n:"Andrés Felipe Vidal Gallego",s:"Séptimo",c:"20232217222",img:"fotos/Andres_felipe.jpeg"},
-{n:"Keila Jireh Sanchez Avilez",s:"Octavo",c:"20231210419",img:"fotos/Keila.jfif"}
+{n:"José Santiago Castro Campos",img:"fotos/Jose_santiago.jpeg"},
+{n:"Jhonnatan Ramírez Caldas",img:"fotos/Jhonnatan.jpeg"},
+{n:"Carol Vanessa Garcia Sanchez",img:"fotos/Carol.jpeg"},
+{n:"Daniel García Trujillo",img:"fotos/Daniel.jpeg"},
+{n:"José David Quintero Oviedo",img:"fotos/Jose_david.jpeg"},
+{n:"Andrés Felipe Vidal Gallego",img:"fotos/Andres_felipe.jpeg"},
+{n:"Keila Jireh Sanchez Avilez",img:"fotos/keila.jpg"}
 ]; // img: misma ruta de foto que en index.html
+const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
 const BLANCO="Voto en blanco";
-const RUN={
+const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
 "Presidente":["Carol Vanessa Garcia Sanchez","Andrés Felipe Vidal Gallego"],
 "Vicepresidente":["Carol Vanessa Garcia Sanchez","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
 "Tesorero":["Carol Vanessa Garcia Sanchez","Jhonnatan Ramírez Caldas"],
@@ -82,7 +83,6 @@ const RUN={
 "Fiscal":["Carol Vanessa Garcia Sanchez","José Santiago Castro Campos"],
 "Secretaria":["Carol Vanessa Garcia Sanchez"]
 };
-const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
 /* =========================================================== */
 const COL=["#1f5130","#b5d23a","#4f9a3f","#111111","#8bb83a","#2e6b34"],GRAY="#b9c6b6";
 const ini=n=>n.split(" ").slice(0,2).map(w=>w[0]).join("");
