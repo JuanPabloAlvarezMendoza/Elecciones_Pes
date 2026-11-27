@@ -67,12 +67,12 @@ const C=[
 const P=["Presidente","Vicepresidente","Tesorero","Webmaster","Fiscal","Secretaria"];
 const BLANCO="Voto en blanco";
 const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
-"Presidente":["Carol Vanessa","Andrés Felipe Vidal Gallego"],
-"Vicepresidente":["Carol Vanessa","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
-"Tesorero":["Carol Vanessa","Jhonnatan Ramírez Caldas"],
-"Webmaster":["Carol Vanessa"],
-"Fiscal":["Carol Vanessa","José Santiago Castro Campos"],
-"Secretaria":["Carol Vanessa"]
+"Presidente":["Carol Vanessa Garcia Sanchez","Andrés Felipe Vidal Gallego"],
+"Vicepresidente":["Carol Vanessa Garcia Sanchez","José David Quintero Oviedo","Jhonnatan Ramírez Caldas","Daniel García Trujillo"],
+"Tesorero":["Carol Vanessa Garcia Sanchez","Jhonnatan Ramírez Caldas"],
+"Webmaster":["Carol Vanessa Garcia Sanchez"],
+"Fiscal":["Carol Vanessa Garcia Sanchez","José Santiago Castro Campos"],
+"Secretaria":["Carol Vanessa Garcia Sanchez"]
 };
 const norm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 const opts=p=>RUN[p].map(n=>C.find(c=>norm(c.n)===norm(n))||{n:n,s:"—",c:"—",img:""}).concat([{n:BLANCO,blank:true}]);
