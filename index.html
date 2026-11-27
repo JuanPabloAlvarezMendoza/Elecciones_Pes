@@ -74,7 +74,8 @@ const RUN={ // quién se postuló a cada cargo (nombres exactos de la lista C)
 "Fiscal":["Carol Vanessa","José Santiago Castro Campos"],
 "Secretaria":["Carol Vanessa"]
 };
-const opts=p=>RUN[p].map(n=>C.find(c=>c.n===n)).concat([{n:BLANCO,blank:true}]);
+const norm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+const opts=p=>RUN[p].map(n=>C.find(c=>norm(c.n)===norm(n))||{n:n,s:"—",c:"—",img:""}).concat([{n:BLANCO,blank:true}]);
 /* =============================== */
 
 let step=0,votes={},busy=false,error="",started=false,code="",pname="";
@@ -119,8 +120,8 @@ function intro(){
    const r=await fetch(URL_API+"?check="+encodeURIComponent(code)+"&t="+Date.now());
    const j=await r.json();busy=false;
    if(j.voted){error="Este código ya votó.";return intro()}
-   started=true;error="";render();
-  }catch(e){busy=false;error="No se pudo conectar con el servidor ("+e.message+"). Revisa la URL del script y que la implementación sea para “Cualquier persona”.";intro()}
+  }catch(e){busy=false;error="No se pudo conectar con el servidor ("+e.message+"). Revisa la URL del script y que la implementación sea para “Cualquier persona”.";return intro()}
+  started=true;error="";render();
  };
 }
 function review(){
